@@ -4,7 +4,7 @@ module Gitthello
 
     def initialize(oauth_token, repo_for_new_cards, repos_to_consider)
       @github            = Github.new(:oauth_token => oauth_token)
-      @user, @repo       = repo_for_new_cards.split(/\//)
+      # @user, @repo       = repo_for_new_cards.split(/\//)
       @repos_to_consider = repos_to_consider
     end
 
@@ -67,9 +67,9 @@ module Gitthello
     def new_issues_to_trello(trello_helper)
       issue_bucket.each do |repo_name, issue|
         next if trello_helper.has_card?(issue)
-        prefix = repo_name.sub(/^mops./,'').capitalize
+        # prefix = repo_name.sub(/^mops./,'').capitalize
         card = trello_helper.
-          create_todo_card("%s: %s" % [prefix,issue["title"]],
+          create_todo_card("%s" % [issue["title"]],
                            issue["body"], issue["html_url"],
                            issue.keys.include?("pull_request"))
         add_trello_url(issue, card.url)

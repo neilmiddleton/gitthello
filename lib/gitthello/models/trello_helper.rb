@@ -1,6 +1,6 @@
 module Gitthello
   class TrelloHelper
-    attr_reader :list_todo, :list_backlog, :list_done, :github_urls, :board
+    attr_reader :list_todo, :list_pr, :list_done, :github_urls, :board
 
     # https://trello.com/docs/api/card/#put-1-cards-card-id-or-shortlink
     MAX_TEXT_LENGTH=16384
@@ -17,11 +17,11 @@ module Gitthello
     def setup
       @board = retrieve_board
 
-      @list_todo    = @board.lists.select { |a| a.name == 'To Do' }.first
+      @list_todo    = @board.lists.select { |a| a.name == 'Issues' }.first
       raise "Missing trello To Do list" if list_todo.nil?
 
-      @list_backlog = @board.lists.select { |a| a.name == 'Backlog' }.first
-      raise "Missing trello Backlog list" if list_backlog.nil?
+      @list_pr    = @board.lists.select { |a| a.name == 'For Review' }.first
+      raise "Missing trello PR list" if list_todo.nil?
 
       @list_done    = @board.lists.select { |a| a.name == 'Done' }.first
       raise "Missing trello Done list" if list_done.nil?
@@ -47,11 +47,7 @@ module Gitthello
     end
 
     def create_todo_card(name, desc, issue_url, is_pull_request)
-      create_card_in_list(name, desc, issue_url, list_todo.id, is_pull_request)
-    end
-
-    def create_backlog_card(name, desc, issue_url)
-      create_card_in_list(name, desc, issue_url, list_backlog.id)
+      create_card_in_list(name, desc, issue_url, is_pull_request ? list_pr.id : list_todo.id, is_pull_request)
     end
 
     #
@@ -130,6 +126,7 @@ module Gitthello
         create(:name => truncate_text(name), :list_id => list_id,
                :desc => truncate_text(desc)).tap do |card|
         card.add_attachment(url, "github")
+        card.add_label("red") if !is_pull_request
         card.add_label("purple") if is_pull_request
       end
     end

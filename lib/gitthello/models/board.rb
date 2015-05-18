@@ -19,7 +19,6 @@ module Gitthello
       @trello_helper.move_cards_with_closed_issue(@github_helper)
       @github_helper.retrieve_issues
       @github_helper.new_issues_to_trello(@trello_helper)
-      @trello_helper.new_cards_to_github(@github_helper)
     end
 
     def add_trello_link_to_issues
