@@ -20,10 +20,10 @@ module Gitthello
       @list_todo    = @board.lists.select { |a| a.name == 'Issues' }.first
       raise "Missing trello To Do list" if list_todo.nil?
 
-      @list_pr    = @board.lists.select { |a| a.name == 'For Review' }.first
+      @list_pr    = @board.lists.select { |a| a.name == 'Open PRs' }.first
       raise "Missing trello PR list" if list_todo.nil?
 
-      @list_done    = @board.lists.select { |a| a.name == 'Done' }.first
+      @list_done    = @board.lists.select { |a| a.name == 'Done / For Retro' }.first
       raise "Missing trello Done list" if list_done.nil?
 
       @github_urls = all_github_urls
